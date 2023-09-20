@@ -10,6 +10,7 @@ import Headder from "./Components/Headder";
 import Login from "./Components/Login";
 import Home from "./Components/Home";
 import Userdashboard from "./Components/Userdashboard";
+import Admindashboard from "./Components/Admindashboard";
 
 
 function App() {
@@ -22,8 +23,9 @@ function App() {
       <Route path="/header" element={<Headder/>}/>
       <Route path="/signup" element={<Signup/>}/>
       <Route path="/login" element={<Login/>}/>
-      <Route path="/" element={<Home/>}/>
+      <Route path="/" exact element={<Home/>}/>
       <Route path="/userdashboard" element={<Userdashboard/>}/>
+      <Route path="/admindashboard" element={<Admindashboard/>}/>
     </Routes>
     </BrowserRouter>
     </div>

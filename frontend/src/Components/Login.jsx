@@ -23,13 +23,15 @@ const Login = () => {
     .then((response)=>{
       console.log(response)
       if(response.data.message==="login successfull"){
-        navigate("/");
+        navigate("/userdashboard");
       }
       else if(response.data.message==="admin login  successfull"){
-        navigate("/signup");
+        alert("admin login succesfull")
+        navigate("/admindashboard");
       }
       else{
         console.log(response.data.message)
+        alert(response.data.message)
       }
     })
     .catch(error=>console.log(error))
