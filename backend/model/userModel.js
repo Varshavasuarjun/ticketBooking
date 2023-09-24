@@ -14,7 +14,18 @@ userSchema=mongoose.Schema({
         type:String,
         required:true,
         
+    },
+    bookedMovies:{
+           type:[
+            {
+                
+                movieName:"String"
+            }
+           ]
+        
+       
     }
+
 
 })
 userModel=mongoose.model("user",userSchema);

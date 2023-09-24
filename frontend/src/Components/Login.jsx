@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom"
 const Login = () => {
   const navigate = useNavigate()
   const [input, setInputs] = useState({});
+ 
 
   const inputHolder=(e)=>{
      setInputs({...input, [e.target.name]: e.target.value})
@@ -21,9 +22,15 @@ const Login = () => {
   const loginHandler=()=>{
     axios.post("http://localhost:7000/api/login",input)
     .then((response)=>{
-      console.log(response)
+      console.log(response.data)
       if(response.data.message==="login successfull"){
+        const userId = response.data.data._id;
+        const userName = response.data.data.Name;
+        sessionStorage.setItem("userId", userId);
+        sessionStorage.setItem("userName", userName);
+      
         navigate("/userdashboard");
+
       }
       else if(response.data.message==="admin login  successfull"){
         alert("admin login succesfull")

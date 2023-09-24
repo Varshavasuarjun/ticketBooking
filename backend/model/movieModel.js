@@ -5,6 +5,23 @@ movieSchema=mongoose.Schema({
     Category:"String",
     Languages:"String",
     Cast:"String",
+    // Cast: {
+    //     type: [
+    //         {
+    //             castimg: {
+    //                 type: String,
+    //                 required: false,
+    //             },
+
+    //             castname:{
+    //                 type:String,
+    //                 required: false
+    //             }
+               
+    //         },
+    //     ],
+    //     default: [],
+    // },
     Description:"String",
     TicketRates:"Number",
     NoOfSeats:"Number",

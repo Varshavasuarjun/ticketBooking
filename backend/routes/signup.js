@@ -34,11 +34,11 @@ router.post("/login",async (req,res)=>{
         
         if(user){
              try {
-                console.log("first")
+                console.log(user)
                 if(user.password==password){
                 
                    console.log(user)
-                    res.json({message:"login successfull"});
+                    res.json({message:"login successfull",data:user});
                 }
                 else{
                     res.json({message:"login fails"});

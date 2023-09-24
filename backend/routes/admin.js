@@ -48,6 +48,22 @@ router.post("/viewMovie/:id",async (req,res)=>{
     }
    
  })
+//  using moviename
+ router.post("/viewMovieName/:id",async (req,res)=>{
+    const moviename=req.params.id;
+    console.log(moviename)
+    try {
+        const movie= await movieModel.findOne({MovieName:moviename})
+        res.status(200).send(movie);
+        console.log(movie);
+    } 
+    catch (error) {
+        console.log(error);
+        res.json(error);
+
+    }
+   
+ })
 // delete a movie
 router.post("/deleteMovie/:id",async (req,res)=>{
     const movieId=req.params.id;

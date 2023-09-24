@@ -38,7 +38,7 @@ const Headder = () => {
 
           />
        </Box>
-       <Box display={"flex"}>
+       <Box display={"flex"} >
          <Tabs  textColor='white' indicatorColor='white'>
             <Tab label="LogIn" href='/login' />
             <Tab label="SignUp" href='/signup'/>
