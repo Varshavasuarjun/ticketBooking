@@ -125,6 +125,27 @@ router.post("/seatupdate/:id", async(req,res)=>{
     }
 
 })
+// save reviews in db
+router.post('/addreviews/:id', async(req,res)=>{
+    const id=req.params.id;
+    const reviwes=req.body;
+    console.log(reviwes)
+    try {
+        const addReviw= await ticketBookingModel.findByIdAndUpdate(id,{
+               $push:{
+                reviws:reviwes
+
+                
+               }
+        }) .exec();
+
+    }
+          
+     catch (error) {
+        console.log(error) ;
+        res.json("error");
+    }
+})    
 
 
 

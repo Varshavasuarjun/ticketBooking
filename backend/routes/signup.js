@@ -77,3 +77,30 @@ router.post("/login",async (req,res)=>{
    
 })
  module.exports=router;
+//  "seats"
+// : 
+// [ { "seatname": "A1", "disStatus": true},
+//   { "seatname": "A2", "disStatus": true},
+//   { "seatname": "A3", "disStatus": true},
+//   { "seatname": "A4", "disStatus": true},
+//   { "seatname": "A5", "disStatus": true},
+
+//   { "seatname": "B1", "disStatus": true},
+//    { "seatname": "B2", "disStatus": true},
+//   { "seatname": "B3", "disStatus": true},
+//   { "seatname": "B4", "disStatus": true},
+//   { "seatname": "B5", "disStatus": true},
+
+//   { "seatname": "C1", "disStatus": true},
+//    { "seatname": "C2", "disStatus": true},
+//   { "seatname": "C3", "disStatus": true},
+//   { "seatname": "C4", "disStatus": true},
+//   { "seatname": "C5", "disStatus": true},
+
+//   { "seatname": "D1", "disStatus": true},
+//    { "seatname": "D2", "disStatus": true},
+//   { "seatname": "D3", "disStatus": true},
+//   { "seatname": "D4", "disStatus": true},
+//   { "seatname": "D5", "disStatus": true}
+
+//  ],

@@ -25,10 +25,12 @@ movieSchema=mongoose.Schema({
     seats:[{
         seatname:"String",
         disStatus:"Boolean"
-    }],
-
-           
-    
+          }],
+   reviws:[{
+          userName:"String",
+          riviews:"String",
+          ratings:"Number"
+          }],
     Booking:["String"],
     Description:"String",
     TicketRates:"Number",

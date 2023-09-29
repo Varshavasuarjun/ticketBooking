@@ -5,20 +5,25 @@ import { useNavigate } from 'react-router-dom'
 import Userheader from './Userheader'
 import Modal from 'react-bootstrap/Modal';
 import ChairIcon from '@mui/icons-material/Chair';
+import Carousel from 'react-bootstrap/Carousel';
+import Pagination from 'react-bootstrap/Pagination';
 
 const Movie = () => {
     const navigate = useNavigate();
-    const[seat,setseat]=useState([])
     const userId = sessionStorage.getItem("userId")
     const movieId = sessionStorage.getItem("movieId")
     const movieName =sessionStorage.getItem("movieName")
     const [movieData, setMovieData] = useState([])
+    const [seat,setseat]=useState([])
+    const [review,setReview]=useState([])
     const [availbe, setavailbe] = useState(null)
     const [disable, setdisable] = useState(false)
     const [colourr, setcolour] = useState(false)
     const [show, setShow] = useState(false);
     const [selectedSeat,setSelectedSeat]=useState('');
     const[blokSeat,setBlikseat]=useState("true")
+    const [index, setIndex] = useState(0);
+    const [tryyy, settryy] = useState(true);
    
     useEffect(() => {
 
@@ -30,11 +35,13 @@ const Movie = () => {
                     // console.log(response.data)
                     setMovieData(response.data)
                     console.log(userId);
-                setseat(response.data.seats);
+                    setseat(response.data.seats);
+                    setReview(response.data.reviws);
                     if (response.data.SeatAvailable == "0") {
                         setavailbe("HOUSEFULL")
                         setdisable(true)
                         setcolour("red")
+                        settryy(false)
                       
                     }
                     else if (response.data.SeatAvailable <= "5") {
@@ -57,6 +64,14 @@ const Movie = () => {
 
 
     }, [])
+   
+        
+      
+    const handleSelect = (selectedIndex) => {
+        setIndex(selectedIndex);
+
+    }
+   
     console.log(movieData)
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
@@ -100,46 +115,83 @@ const Movie = () => {
         <div style={{ backgroundImage: "linear-gradient(180deg, #BCEDC7, #B2A3DB)" }}   >
             <Userheader />
             <Box  >
-                <Grid container my={4} padding={2} marginLeft={2} marginRight={2}>
-                    <Grid item xs={12} sm={6} xl={5} my={2} display={'flex'} sx={{ maxHeight: 565 }} >
+                <Grid container my={2} padding={2} marginLeft={2} marginRight={2}>
+                    <Grid item xs={12} sm={6} xl={5} my={2} display={'flex'} sx={{ maxHeight: 550 }} >
                         <Stack width={"100%"} direction={'column'} spacing={1} >
                             <img height={"100%"} width={"90%"} margin="auto"
                             src={movieData.Image} alt="movie poster" />
                            <Stack direction="row">
-                               <h5>RATING : </h5> <Rating value={'3'} readOnly sx={{ color: 'red' }} />
+                               <h5>RATING : </h5> <Rating value={'4'} readOnly sx={{ color: 'red' }} />
+                              
                           </Stack>
                         </Stack>
                     </Grid >
 
                     <Grid item xs={10} sm={6} xl={5} my={2} display={'flex'}>
-                        <Card my={4} height={'80%'} width={"100%"} sx={{ backgroundImage: "linear-gradient(180deg, #BCEDC7, #B2A3DB)" }} >
-                            <CardContent height={'80%'} display='flex' margin="auto" >
-                                <Typography variant='h5' my={4} marginLeft={2} sx={{ color: "red", justifyContent: 'center' }}>
+                        <Card my={4} height={'80%'} width={"100%"}
+                         sx={{ backgroundImage: "linear-gradient(180deg, #BCEDC7, #B2A3DB)" }} >
+                            <CardContent height={'80%'} display='flex' margin="auto" fontFamily={'BlinkMacSystemFont'} >
+                               
+                                <Typography variant='h5' my={1}   marginLeft={2}
+                                 sx={{ color: "red", justifyContent: 'center' }}>
                                     Movie : {movieData.MovieName}
                                 </Typography>
-                                <Typography variant='h6' my={4} marginLeft={2}>
-                                    Category:  {movieData.Category}
-                                </Typography>
-                                <Typography variant='h6' my={4} marginLeft={2}>
-                                    Languages:  {movieData.Languages}
-                                </Typography>
-                                <Typography variant='h6' my={4} marginLeft={2} textAlign={'justify'} >
+                                <Typography variant='h6' fontFamily={'BlinkMacSystemFont'} my={2} marginLeft={2} textAlign={'justify'} >
                                     Description: {movieData.Description}
                                 </Typography>
-                                <Typography variant='h6' my={4} marginLeft={2}>
+                                <Typography variant='h6'fontFamily={'BlinkMacSystemFont'} my={2} marginLeft={2}>
                                     Cast : {movieData.Cast}
                                 </Typography>
-                                <Typography variant='h6' my={4} marginLeft={2}>
+                                <Typography variant='h6'fontFamily={'BlinkMacSystemFont'} my={2} marginLeft={2}>
                                     TicketRates:  {movieData.TicketRates}
                                 </Typography>
-                                <Typography variant='h6' my={4} marginLeft={2}>
-                                    Seats:   {movieData.SeatAvailable}
-                                </Typography>                       
+                                {review.map((val,ind)=>{
+                                    return <Carousel variant='dark'
+                                      autoPlay={false}
+
+                                       marginLeft={2} 
+                                      indicators={disable}
+                                      activeIndex={index}
+                                      onSelect={handleSelect}
+                                    >
+                                    <Carousel.Item  alignContent={'center'}  >
+                                        <Grid container margin={"15px"} width={'100%'} >
+                                            <Grid Item xs={10} md={11}
+                                             padding={"10px"}
+                                             margin={"15px"}
+                                             wrap={true}
+                                             controls={"false"}
+                                              border={'inset'} 
+                                              backgroundColor={'beige'}
+                                            //borderRadius={"10px"}
+                                              marginLeft={"9px"}
+                                            >                   
+                                                 <h5 style={{color:"blue"}} fontFamily={'BlinkMacSystemFont'} >REVIEW</h5>                                           
+                                                 <h6 style={{margin:"15px"}}fontFamily={'BlinkMacSystemFont'}>
+                                                    {val.userName} 
+                                                    <Rating value={val.ratings} readOnly  sx={{ color: 'blue' , marginLeft:"30px"}}/>
+                                                    </h6>
+                                                <p style={{margin:"15px"}} fontFamily={'BlinkMacSystemFont'} justifyContent>{val.riviews}</p>
+                                           </Grid>
+                                        </Grid>
+                                      
+                                       </Carousel.Item>
+                                </Carousel>
+                            })}                    
                             </CardContent>
                             <CardActions>
+                                {!tryyy?
+                                <Button
+                                    margin="auto" 
+                                     variant="contained" 
+                                    textAlign="end"
+                                    size='small' 
+                                    sx={{ backgroundColor: colourr ,color:'black' }} >
+                                    {availbe}
+                                    </Button>:
                                 <Button marginLeft={"5"} disabled={disable} variant='contained' onClick={handleShow} >
                                     BOOK TICKETS
-                                </Button>
+                                </Button>}
                                 <Modal show={show} onHide={handleClose}  style={{display:"contained", minHeight:"650px"}} >
                                     <Modal.Header closeButton>
                                         <Grid container>
@@ -164,6 +216,9 @@ const Movie = () => {
                                                <Typography   textAlign={"center"} fontFamily={'BlinkMacSystemFont'}>
                                                  Shows : &nbsp;{movieData.timing} 
                                                </Typography > 
+                                               <Typography  textAlign={"center"} fontFamily={'BlinkMacSystemFont'} >
+                                                   Seat No: {selectedSeat}
+                                                </Typography>
                                                 <Typography variant='body1' margin={"4px"} textAlign={"center"} fontFamily={'BlinkMacSystemFont'} >
                                                  Rs. &nbsp;{movieData.TicketRates}
                                                 </Typography> 
@@ -183,18 +238,23 @@ const Movie = () => {
                                                                <ChairIcon />
                                                                {/* <ChairIcon sx={{ color:blokSeat}} */}
                                                              </Button>
-                                                })}  
+                                                })} 
+                                                <Box my={"10px"}>
                                                 Available:  <Button><ChairIcon /></Button> Booked: <Button disabled><ChairIcon /></Button>
                                                 {/* <Typography> Selected Seat: {selectedSeat}</Typography> */}
                                                 {/* <Button onClick={confromSeatHandler}>Confirm</Button> */}
+                                                <Typography fontFamily={'BlinkMacSystemFont'} >
+                                                   Selected Seat: {selectedSeat}
+                                                </Typography>
+                                                </Box> 
                                             </Grid>                                        
                                          </Box>
                                    
                                     </Modal.Body>
                                     <Modal.Footer>
-                                        <Typography variant='h6'fontFamily={'BlinkMacSystemFont'} my={2}>
+                                        {/* <Typography variant='h6'fontFamily={'BlinkMacSystemFont'} my={2}>
                                           Selected Seat: {selectedSeat}
-                                         </Typography>
+                                         </Typography> */}
                                          <Button onClick={confromSeatHandler}>
                                            Confirm
                                         </Button>
