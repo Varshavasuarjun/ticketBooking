@@ -3,9 +3,10 @@ const ticketBookingSchema=mongoose.Schema({
     userId: "String",
     moivieId: "String",
     movieName:"String",
+    
     date:{
         type: Date,
-     
+        default: new Date(),
     
     }  
 })

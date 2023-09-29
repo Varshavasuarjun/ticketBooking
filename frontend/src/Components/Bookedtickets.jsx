@@ -24,6 +24,7 @@ const Bookedtickets = () => {
                
 
             })
+            
             .catch((error => console.log("error")))
     }, [])
 
@@ -67,7 +68,7 @@ const Bookedtickets = () => {
                                                 Seats: E25
                                             </Typography>
                                             <Typography margin={1}>
-                                                SUN , 7 DEC 2023
+                                            Booked On : &nbsp;  {new Date(value.date).getDate()}-  {new Date(value.date).getMonth()}-  {new Date(value.date).getFullYear()}
                                             </Typography>
                                                 <Button
                                                     value={value}

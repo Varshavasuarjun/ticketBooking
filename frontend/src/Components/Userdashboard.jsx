@@ -1,4 +1,4 @@
-import { Grid, Stack , Card, CardContent, Typography, CardActions, Button, CardMedia, SliderValueLabel} from '@mui/material';
+import { Grid, Stack , Card, CardContent, Typography, CardActions, Button, CardMedia, SliderValueLabel, Box} from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import Userheader from './Userheader';
 import axios, { Axios } from 'axios';
@@ -23,7 +23,10 @@ const Userdashboard = () => {
 // load a movie when clicked
    const movieHandler=(e)=>{
       const movieId= e._id
+      const movieName=e.MovieName
+      console.log(movieName);
       sessionStorage.setItem("movieId", movieId);
+      sessionStorage.setItem("movieName",movieName);
       console.log(movieId);
       navigate("/movie")
 
@@ -42,19 +45,27 @@ const Userdashboard = () => {
    }
 
   return (
-    <div>
+    <div  style={{ height: "100%", backgroundImage:"linear-gradient(TO RIGHT TOP, #051937, #004D7A, #008793,#00BF72,#A8EB12)" }}>
     <Userheader/>
-    <Grid container  my={4}  padding={2}  margin={"auto"} sx={{  backgroundImage:"linear-gradient(TO RIGHT TOP, #051937, #004D7A, #008793,#00BF72,#A8EB12)" }}>
+    <Box sx={{ minHeight: "100vh" }} display={"flex"}>
+    <Grid container  my={4}  padding={6}  margin={"auto"} >
       {movie.map((value,index)=>{
-        return <Grid item key={index} xs={12} sm={3} xl={3}  my={2} display={'flex'} >
-          <Card  my={2} height={'100%'} width={"100%"} margin="auto" >                      
+        return <Grid item key={index} xs={12} sm={1} xl={12}  my={2} display={'flex'} >
+          <Card  my={2} height={'100%'} width={"50%"} margin={"auto"} sx={{minWidth:"250px" ,maxHeight:"500px", minHeight:"150px" ,  backgroundImage:"linear-gradient(TO left bottom, #051937, #004D7A, #008793,#00BF72,#A8EB12)" ,':hover':{boxShadow:20}}}
+          
+          >                      
+         
             <CardContent display={"flex"} >
+              
                <img 
-               height={"100%"} 
+               
+               height={"50%"} 
                width={"100%"} 
                src={value.Image}
                 alt="movie poster"
                  margin="auto" 
+                
+                 
                  onClick={()=>movieHandler(value)}
                  
                  />
@@ -67,17 +78,19 @@ const Userdashboard = () => {
               <Typography gutterBottom variant='body' component="div">
                 {value.Languages}
               </Typography>
+            
            </CardContent>
+           
            <CardActions
             >
-              <Button size='small'  >BOOK</Button>
+              <Button size='small'  onClick={()=>movieHandler(value)}  >BOOK</Button>
            </CardActions>
          </Card>
        </Grid>
       })}
 
     </Grid>  
-    
+    </Box>
     </div>
   )
 }

@@ -14,10 +14,10 @@ const Userheader = () => {
     useEffect(()=>{
        axios.post('http://localhost:7000/api/viewMovies')
        .then((response)=>{
-         console.log(response.data);
-         setMovie(response.data);
          
-          console.log( movie)
+         setMovie(response.data);
+         console.log(response.data);
+         //  console.log( movie)
        })
        .catch()
     },[])

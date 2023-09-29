@@ -5,6 +5,7 @@ router.use(express.urlencoded({extended:false}));
 router.use(express.json());
 
 const movieModel=require ("../model/movieModel");
+
 // add movie
 router.post("/addMovie", async(req,res)=>{
     const newMovie=req.body;
@@ -15,71 +16,57 @@ router.post("/addMovie", async(req,res)=>{
         res.status(200).json({message:"movie added succesfully"})
         
     } catch (err) {
-       console.log(error) ;
-       res.json("error");
+       console.log(err) ;
+       res.json("err");
     }
 })
-//view all movies
- router.post("/viewMovies",async (req,res)=>{
+// view all movies
+router.post("/viewMovies", async(req,res)=>{
     const input=req.body;
     try {
-        const movies= await movieModel.find()
+        const movies=await movieModel.find()
         res.status(200).send(movies);
-    } catch (error) {
-        console.log(error);
-        res.json(error);
-
+        
+    } catch (err) {
+       console.log(err) ;
+       res.json("err");
     }
-   
- })
-//  view a perticular movie
-router.post("/viewMovie/:id",async (req,res)=>{
+})
+ 
+// view a perticular movie 
+router.post("/viewMovie/:id", async(req,res)=>{
     const movieId=req.params.id;
     console.log(movieId)
     try {
-        const movie= await movieModel.findOne({_id:movieId})
+        const movie =await movieModel.findOne({_id:movieId})
         res.status(200).send(movie);
-        console.log(movie);
-    } 
-    catch (error) {
-        console.log(error);
-        res.json(error);
-
+        
+    } catch (err) {
+       console.log(err) ;
+       res.json("err");
     }
-   
- })
-//  using moviename
- router.post("/viewMovieName/:id",async (req,res)=>{
-    const moviename=req.params.id;
-    console.log(moviename)
-    try {
-        const movie= await movieModel.findOne({MovieName:moviename})
-        res.status(200).send(movie);
-        console.log(movie);
-    } 
-    catch (error) {
-        console.log(error);
-        res.json(error);
+})
 
-    }
-   
- })
 // delete a movie
 router.post("/deleteMovie/:id",async (req,res)=>{
     const movieId=req.params.id;
     console.log(movieId)
     try {
         const movie= await movieModel.findByIdAndDelete({_id:movieId})
-        res.status(200).json({message:"movie remoived successfully"});
+        res.status(200).json({message:"movie removed successfully"});
         console.log(movie);
     } 
     catch (error) {
         console.log(error);
         res.json({message:"something went wrong"});
+    }  
+ }) 
 
-    }
-   
- })
+
+
+
+
+
 //  update ticket rate and timing
 // router.post("/updateticket/:id",async (req,res)=>{
 //     const movieId=req.params.id;
@@ -101,6 +88,5 @@ router.post("/deleteMovie/:id",async (req,res)=>{
 //     }
    
 //  })
-
 
 module.exports=router;

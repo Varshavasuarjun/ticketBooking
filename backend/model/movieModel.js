@@ -22,9 +22,18 @@ movieSchema=mongoose.Schema({
     //     ],
     //     default: [],
     // },
+    seats:[{
+        seatname:"String",
+        disStatus:"Boolean"
+    }],
+
+           
+    
+    Booking:["String"],
     Description:"String",
     TicketRates:"Number",
-    NoOfSeats:"Number",
+    NoOfSeats:"String",
+    SeatAvailable:"Number",
     timing:"String"
 
 })

@@ -1,11 +1,7 @@
 
 import {BrowserRouter, Route,  Routes} from "react-router-dom";
-
-
-
 import './App.css';
 import Signup from "./Components/Signup";
-
 import Headder from "./Components/Headder";
 import Login from "./Components/Login";
 import Home from "./Components/Home";
@@ -14,6 +10,7 @@ import Admindashboard from "./Components/Admindashboard";
 import Userheader from "./Components/Userheader";
 import Movie from "./Components/Movie";
 import Bookedtickets from "./Components/Bookedtickets";
+import Seatselect from "./Components/Seatselect";
 
 
 function App() {
@@ -32,6 +29,7 @@ function App() {
       <Route path="/admindashboard" element={<Admindashboard/>}/>
       <Route path="/movie" element={<Movie/>}/>
       <Route path="/bookedtickets" element={<Bookedtickets />} />
+      <Route path="/seatselect" element={<Seatselect />} />
     </Routes>
     </BrowserRouter>
     </div>
