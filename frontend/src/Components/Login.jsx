@@ -76,7 +76,7 @@ const Login = () => {
             margin="auto"
             name="password"
             label="Password"
-            type="email"
+            type="password"
             fullWidth
             variant="standard"
             onChange={inputHolder}

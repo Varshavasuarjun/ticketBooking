@@ -131,13 +131,14 @@ router.post('/addreviews/:id', async(req,res)=>{
     const reviwes=req.body;
     console.log(reviwes)
     try {
-        const addReviw= await ticketBookingModel.findByIdAndUpdate(id,{
+        const addReviw= await movieModel.findByIdAndUpdate(id,{
                $push:{
-                reviws:reviwes
-
-                
-               }
+                reviws:reviwes,
+               },
         }) .exec();
+        res.json({message:"revw added",addReviw});
+        console.log(addReviw)
+        
 
     }
           

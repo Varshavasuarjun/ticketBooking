@@ -145,17 +145,17 @@ const Movie = () => {
                                 <Typography variant='h6'fontFamily={'BlinkMacSystemFont'} my={2} marginLeft={2}>
                                     TicketRates:  {movieData.TicketRates}
                                 </Typography>
-                                {review.map((val,ind)=>{
-                                    return <Carousel variant='dark'
-                                      autoPlay={false}
+                                 <Carousel variant='dark'
+                                    autoPlay={"disabled"}
 
-                                       marginLeft={2} 
-                                      indicators={disable}
-                                      activeIndex={index}
-                                      onSelect={handleSelect}
+                                    marginLeft={2} 
+                                    indicators={disable}
+                                    activeIndex={index}
+                                    onSelect={handleSelect}
                                     >
-                                    <Carousel.Item  alignContent={'center'}  >
-                                        <Grid container margin={"15px"} width={'100%'} >
+                                        {review.map((val,ind)=>{
+                                        return<Carousel.Item autoPlay={"false"} alignContent={'center'}  >
+                                            <Grid container margin={"15px"} width={'100%'} >
                                             <Grid Item xs={10} md={11}
                                              padding={"10px"}
                                              margin={"15px"}
@@ -169,15 +169,16 @@ const Movie = () => {
                                                  <h5 style={{color:"blue"}} fontFamily={'BlinkMacSystemFont'} >REVIEW</h5>                                           
                                                  <h6 style={{margin:"15px"}}fontFamily={'BlinkMacSystemFont'}>
                                                     {val.userName} 
-                                                    <Rating value={val.ratings} readOnly  sx={{ color: 'blue' , marginLeft:"30px"}}/>
+                                                    <Rating value={val.ratings} readOnly  sx={{   marginLeft:"30px"}}/>
                                                     </h6>
                                                 <p style={{margin:"15px"}} fontFamily={'BlinkMacSystemFont'} justifyContent>{val.riviews}</p>
                                            </Grid>
                                         </Grid>
                                       
                                        </Carousel.Item>
+                                     })}   
                                 </Carousel>
-                            })}                    
+                                              
                             </CardContent>
                             <CardActions>
                                 {!tryyy?
