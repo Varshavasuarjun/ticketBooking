@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Navigate, useNavigate } from 'react-router-dom';
 const Userheader = () => {
     const [movie,setMovie]=useState([]);
-    const [userName,setUserName]=useState(sessionStorage.getItem("userName"));
+    const [userName]=useState(sessionStorage.getItem("userName"));
     const [value,setValue]=useState(null)
     const navigate=useNavigate()
     
@@ -22,7 +22,18 @@ const Userheader = () => {
        .catch()
     },[])
     
-  
+   const logout=()=>{
+    const items=["userId","userName","movieId","movieName" ]
+    items.forEach((item)=>{
+      sessionStorage.removeItem(item)
+    })
+    // sessionStorage.removeItem("userId")
+    // sessionStorage.removeItem("usertoken")
+    // sessionStorage.removeItem("userName")
+    // sessionStorage.removeItem("movieId");
+    // sessionStorage.removeItem("movieName");
+    navigate("/");
+   }
   return (
     <AppBar  position='stickey' sx={{bgcolor:"#2b2d42"}}>
     <Toolbar>
@@ -48,7 +59,8 @@ const Userheader = () => {
       <Box display={"flex"}>
         <Tabs  textColor='white' indicatorColor='white'>
         <Tab label="My BookingS" href='/Bookedtickets'/>
-           <Tab  label={userName}  href='/Userdashboard'/>
+        <Tab  label={userName}  href='/Userdashboard'/>
+        <Tab  label="Log Out" onClick={logout} />
            <Avatar 
             size="small"
             src="/broken-image.jpg" />

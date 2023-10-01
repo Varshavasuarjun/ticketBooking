@@ -13,6 +13,8 @@ const Movie = () => {
     const userId = sessionStorage.getItem("userId")
     const movieId = sessionStorage.getItem("movieId")
     const movieName =sessionStorage.getItem("movieName")
+    const email=sessionStorage.getItem("email");
+    const [userName]=useState(sessionStorage.getItem("userName"));
     const [movieData, setMovieData] = useState([])
     const [seat,setseat]=useState([])
     const [review,setReview]=useState([])
@@ -24,16 +26,15 @@ const Movie = () => {
     const[blokSeat,setBlikseat]=useState("true")
     const [index, setIndex] = useState(0);
     const [tryyy, settryy] = useState(true);
-   
+    
     useEffect(() => {
 
         axios.post("http://localhost:7000/api/viewMovie/" + movieId)
             .then((response) => {
-                console.log(movieId)
-
+                console.log(movieId);
                 if (response.status == 200) {
-                    // console.log(response.data)
-                    setMovieData(response.data)
+                    console.log(response.data);
+                    setMovieData(response.data);
                     console.log(userId);
                     setseat(response.data.seats);
                     setReview(response.data.reviws);
@@ -41,8 +42,7 @@ const Movie = () => {
                         setavailbe("HOUSEFULL")
                         setdisable(true)
                         setcolour("red")
-                        settryy(false)
-                      
+                        settryy(false)  
                     }
                     else if (response.data.SeatAvailable <= "5") {
                         setavailbe("Fast Filling")
@@ -51,9 +51,7 @@ const Movie = () => {
                     else {
                         setavailbe("AVAILABLE")
                         setcolour('#7cb342')
-                    }
-
-                    // console.log(movieData)
+                    } // console.log(movieData)
 
                 }
                 else {
@@ -61,8 +59,6 @@ const Movie = () => {
                 }
             })
             .catch((error => console.log(error)))
-
-
     }, [])
    
         
@@ -75,7 +71,6 @@ const Movie = () => {
     console.log(movieData)
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
-
     const seatHandler=(val)=>{
         console.log(val.seatname);
          setSelectedSeat(val.seatname)
@@ -83,33 +78,40 @@ const Movie = () => {
     }  
 
    const confromSeatHandler=(e)=>{
-        
-        console.log("first")
         console.log(blokSeat );
         const data={
-            "name":selectedSeat
-        }
-        const tktdata={
-           "userId": userId,
+            "name":selectedSeat,
+            "userId": userId,
             "moivieId": movieId,
             "movieName":movieName,
+        }
+        const emaildata= {
+            "email": email,
+            "text":`Hello  ${userName} ${'\n'} This is the movie ticket conformation message  ${'\n'} Movie : ${movieName}  ${'\n'} seat No : ${selectedSeat}`
         }
         axios.post("http://localhost:7000/api/seatupdate/" + movieId, data)
         .then((response)=>{
             console.log(response.data)
-            
             if(response.data.message=="seats updated"){
-                axios.post("http://localhost:7000/api/booktickets",tktdata)
+                // alert(`Ticket  conformed`);
+                // window.location.reload("false");
+                console.log(response.data.message);
+                axios.post("http://localhost:7000/api/sendmail",emaildata)
                 .then((response)=>{
-                    window.location.reload("false");
-                    console.log(response.data.message)
+                    console.log("email.send");
                 })
+                
+               
+
+
+
+
+               
+                
             }
         })
-        
         .catch(err=>console.log(err))
-
-   }
+    }
 
     return (
         <div style={{ backgroundImage: "linear-gradient(180deg, #BCEDC7, #B2A3DB)" }}   >
@@ -166,11 +168,13 @@ const Movie = () => {
                                             //borderRadius={"10px"}
                                               marginLeft={"9px"}
                                             >                   
-                                                 <h5 style={{color:"blue"}} fontFamily={'BlinkMacSystemFont'} >REVIEW</h5>                                           
+                                                 <h5 style={{color:"blue"}} fontFamily={'BlinkMacSystemFont'} >
+                                                    REVIEW
+                                                 </h5>                                           
                                                  <h6 style={{margin:"15px"}}fontFamily={'BlinkMacSystemFont'}>
                                                     {val.userName} 
                                                     <Rating value={val.ratings} readOnly  sx={{   marginLeft:"30px"}}/>
-                                                    </h6>
+                                                </h6>
                                                 <p style={{margin:"15px"}} fontFamily={'BlinkMacSystemFont'} justifyContent>{val.riviews}</p>
                                            </Grid>
                                         </Grid>
@@ -184,7 +188,7 @@ const Movie = () => {
                                 {!tryyy?
                                 <Button
                                     margin="auto" 
-                                     variant="contained" 
+                                    variant="contained" 
                                     textAlign="end"
                                     size='small' 
                                     sx={{ backgroundColor: colourr ,color:'black' }} >

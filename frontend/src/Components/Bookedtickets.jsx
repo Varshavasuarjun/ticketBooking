@@ -11,21 +11,52 @@ const Bookedtickets = () => {
     const [bookedMovies, setBookedMovies] = useState([]);
     const [currentdate, setDate] = useState(new Date())
     const [rateingval, setRatingval] = useState({})
-    const [input, setInputs] = useState( {} );
+    const [Input, setInputs] = useState( "" );
     const [show, setShow] = useState(false);
+    const userName =sessionStorage.getItem("userName")
+    const [tiketData,setTiketdata]=useState([]);
+    const [inptvall,setinptvall]=useState("")
+   
+    const handleClose = () => setShow(false);
+    const navigate = useNavigate()
+
+    const handleShow = (e) =>{
+        setShow(true);
+        setTiketdata(e.moivieId)
+        console.log(tiketData);
+    }  
     const handleChange = (e,val) => {
         setRatingval(val)
         console.log(rateingval)
     }
-    
-    const handleShow = () => setShow(true);
-    const handleClose = () => setShow(false);
-    const navigate = useNavigate()
     const inputHolder=(e,val)=>{
-        setInputs({...input, [e.target.name]: e.target.value})
+        setInputs({...Input, [e.target.name]: e.target.value})
+        
+        console.log(Input.riviews);
        
-        console.log(input);
     }
+
+    const sendHandler =()=>{
+       console.log(Input);
+       console.log(rateingval);
+       
+       
+       const reviws={
+           userName,
+            Input,
+            rateingval
+        }
+        axios.post("http://localhost:7000/api/addreviews/" +tiketData,reviws)
+        .then((response)=>{
+            console.log(response.data.message)
+            if(response.data.message==="Thank you for the review"){
+                     alert(response.data.message)
+                     window.location.reload(false);
+            } 
+        })
+        .catch((error=> console.log(error)));
+    }
+
     useEffect(() => {
 
         axios.post("http://localhost:7000/api/getbookedtkts/" + userId)
@@ -51,9 +82,17 @@ const Bookedtickets = () => {
 
     //  cancelling tickets
     const CancelHandler = (e) => {
-
+        
+        const tktData={
+            "userId": e.userId,
+            "movieName": e.movieName,
+            "seatNo": e.seatNo,
+            "movieId":e.moivieId
+            
+        }
+        console.log(tktData);
         const tktId = e._id;
-        axios.post("http://localhost:7000/api/cancelticket/" + tktId)
+        axios.post("http://localhost:7000/api/cancelticket/" + tktId, tktData)
             .then((response) => {
                 console.log(response.data.message)
                 if (response.data.message === "Ticket Cancelled") {
@@ -82,43 +121,47 @@ const Bookedtickets = () => {
                          backgroundImage: "linear-gradient(TO RIGHT TOP, #051937, #004D7A, #008793,#00BF72,#A8EB12)" }}>
                             <Grid xs={12} sm={12} xl={12}  >
                                 <Card height={'90%'} width={"100%"} 
-                                sx={{ backgroundColor: "beige", margin: "2px" }}
-                                >
+                                    sx={{ backgroundColor: "beige", margin: "2px" }} >
                                     <Stack direction={"row"} display={"flex"}>
                                         <CardContent alignContent={"center"}>
                                             <Typography margin={1}>
                                                 Movie : {value.movieName}
                                             </Typography>
                                             <Typography margin={1}>
-                                                Seats:
+                                                Seats:{value.seatNo}
                                             </Typography>
                                             <Typography margin={1}>
                                                 Booked On : &nbsp;  {new Date(value.date).getDate()}-  {new Date(value.date).getMonth()}-  {new Date(value.date).getFullYear()}
                                             </Typography>
-                                            {currentdate <= new Date(value.date) ?
-                                                <Button
-                                                    value={value}
-                                                    variant='text'
-                                                    onClick={() => CancelHandler(value)}
-                                                    sx={{ justifyContent: "center" }} >
-                                                    CANCEL
-                                                </Button>
-                                                : <>
+                                            
+                                            {(currentdate) < new Date(value.date)?
+                                            <Button
+                                                value={value}
+                                                variant='text'
+                                                onClick={() => CancelHandler(value)}
+                                                sx={{ justifyContent: "center" }} >
+                                                  CANCEL
+                                            </Button>
+                                            : <>
                                                     {/* <h6>RATING : </h6> <Rating value={rateingval} onChange={handleChange} sx={{ color: 'red' }} /> */}
-                                                    <Button variant="text" onClick={handleShow} startIcon={<RateReviewTwoToneIcon/> }>Review </Button>
-                                                    <Modal show={show} onHide={handleClose}
-                                                     style={{ minHeight: "650px", padding: "100px" }}>
-                                                        <Grid container style={{ minHeight: "50px", margin: "50px" }}>
+                                            <Button variant="text" onClick={()=>handleShow(value)}
+                                                startIcon={<RateReviewTwoToneIcon/> }>
+                                                 Review 
+                                            </Button>
+                                            <Modal show={show} onHide={handleClose}
+                                                style={{ minHeight: "650px", padding: "100px" }}>
+                                                <Grid container style={{ minHeight: "50px", margin: "50px" }}>
+                                                    <Grid item xs={12} md={12}>
+                                                        <Typography>
+                                                             How was your movie
+                                                        </Typography>
+                                                        </Grid>
                                                             <Grid item xs={12} md={12}>
-                                                                <Typography>
-                                                                    How was your movie
-                                                                </Typography>
-                                                            </Grid>
-                                                            <Grid item xs={12} md={12}>
-                                                            <h6>Give RATING : </h6> 
+                                                                <h6>Give RATING : </h6> 
                                                                 <Rating 
-                                                                   value={rateingval}  
+                                                                    value={rateingval}  
                                                                     name="ratings"
+                                                                    
                                                                     onChange={handleChange}
                                                                     sx={{ color: 'red' }} 
                                                                  />
@@ -134,7 +177,7 @@ const Bookedtickets = () => {
                                                                 />
                                                               
                                                                   <Button variant="text" 
-                                                                    onClick={handleShow}
+                                                                    onClick={sendHandler}
                                                                     endIcon={<SendTwoToneIcon /> }>
                                                                       SEND
                                                                  </Button>

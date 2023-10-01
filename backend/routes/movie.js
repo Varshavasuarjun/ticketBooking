@@ -4,43 +4,10 @@ const router=express.Router();
 router.use(express.urlencoded({extended:false}));
 router.use(express.json());
 
+const nodemailer=require('nodemailer');
+
 const movieModel=require ("../model/movieModel");
 const ticketBookingModel=require("../model/ticketBookings");
-
-//  update seats booked in a perticular movie
-router.post("/bookingupdate", async(req,res)=>{
-    const id= req.body._id;
-    var query={_id:id};
-    try {
-    var post= await movieModel.updateOne({_id:id},{ $inc: {'SeatAvailable': 1 }}).exec();
-    const newseat=post.SeatAvailable;
-    var updatedseat=newseat-1;
-    res.json({message:"seats updated",post});
-    console.log(updatedseat)
-    }
-    catch (error) {
-        console.log(error);
-        res.json({message:"seats couldnt update"});
-
-    }
-
-})
-
-// booking tikets 
-router.post('/booktickets',async (req,res)=>{
-    const tkts=req.body;
-   
-    try {
-    const booking= await ticketBookingModel(tkts).save();
-    
-    console.log(booking);
-    res.json({message:"ticket booked"});
-    }
-    catch(error){
-        console.log(error) ;
-       res.json("error");
-    }
-})
 
 // get all movies booked by a perticular user
 router.post('/getbookedtkts/:id', async(req,res)=>{
@@ -63,11 +30,20 @@ router.post('/getbookedtkts/:id', async(req,res)=>{
 // canceling tickets
 router.post('/cancelticket/:id', async(req,res)=>{
     const tktId=req.params.id;
-    console.log(tktId)
+    const tktData=req.body;
+    const id=req.body.movieId;
+    const seatNo=req.body.seatNo;
+    console.log(tktData);
     try {
-        let movies= await ticketBookingModel.findByIdAndDelete({"_id":tktId})
-        console.log(movies);
-        
+        let deleteTicket= await ticketBookingModel.findByIdAndDelete({"_id":tktId})
+        console.log(deleteTicket);
+        const seatStatus=await movieModel.updateOne(
+            {_id:id,"seats.seatname": seatNo },
+             { $set: {'seats.$.disStatus': false },
+               $inc:{'SeatAvailable':1}    
+             },{updeart:true}
+        )
+        console.log(seatStatus);
         res.json({message:"Ticket Cancelled"});
         }
         
@@ -94,60 +70,94 @@ router.post('/todaysBooking/:id', async(req,res)=>{
         res.json("error");
     }
 })    
-// save booked SEATS in db
+// Booking tickets
 router.post("/seatupdate/:id", async(req,res)=>{
     const id=req.params.id;
     console.log(id)
     const data=req.body.name;
-    console.log(data);
-    const datas={ "seats.name":"A2","seats.disabledd":true}
-   
+    const tkts={
+        "userId": req.body.userId,
+        "moivieId":req.body.moivieId,
+        "movieName":req.body.movieName,
+        "seatNo":req.body.name
+    }
+    console.log(req.body);
     var query={_id:id};
-    // console.log(query);
     try {
-
-         const pot=await movieModel.updateOne(
-        {_id:id,"seats.seatname": data },
-        { $set: {'seats.$.disStatus': true },
-          $dec:{'SeatAvailable':1}    },{updeart:true}
+       const pot=await movieModel.updateOne(
+            {_id:id,"seats.seatname": data },
+             { $set: {'seats.$.disStatus': true },
+               $inc:{'SeatAvailable':-1}    
+             },{updeart:true}
         )
+        const booking= await ticketBookingModel(tkts).save();
+            console.log(booking);
+            res.json({message:"seats updated"});
         
-        var post= await movieModel.updateOne({_id:id},{ $inc: {'SeatAvailable': -1 }}).exec();
-        const newseat=post.SeatAvailable;
-        var updatedseat=newseat-1;
-       res.json({message:"seats updated",updatedseat});
-        console.log(post)
     }
     catch (error) {
         console.log(error);
         res.json({message:"seats couldnt update"});
-
     }
 
 })
+
 // save reviews in db
 router.post('/addreviews/:id', async(req,res)=>{
     const id=req.params.id;
-    const reviwes=req.body;
-    console.log(reviwes)
+    const reviwes={
+        "userName": req.body.userName,
+        "riviews":req.body.Input.riviews,
+        "ratings":req.body. rateingval,
+    }
+    console.log(reviwes);
+    console.log(id);
     try {
         const addReviw= await movieModel.findByIdAndUpdate(id,{
                $push:{
                 reviws:reviwes,
                },
         }) .exec();
-        res.json({message:"revw added",addReviw});
-        console.log(addReviw)
-        
-
+        res.json({message:"Thank you for the review",addReviw});
+        console.log(addReviw);
     }
-          
-     catch (error) {
+    catch (error) {
         console.log(error) ;
         res.json("error");
     }
 })    
-
+// sen conformation mail
+router.post('/sendmail', async (req,res)=>{
+    const useremail=req.body.email;
+    const content=req.body.text;
+    var transporter = nodemailer.createTransport(
+        {
+            service:'gmail',
+            auth:{
+                user: 'varshavaeu47@gmail.com',
+                
+                pass:' djjj yrlq dlte zmhu '
+               
+            }
+        })
+     var mailOption={
+        from:'Movie Booking App',
+         to:useremail,
+         subject:'ticket booking conformd',
+          text:content
+     }
+   try {
+    
+   await transporter.sendMail(mailOption);
+   res.json({message:"email sent successfully"})
+       
+   }
+    catch (error) {
+        console.log(error);
+        res.json({error:"email couldnt sent"});
+    
+   }    
+})
 
 
 module.exports=router;
