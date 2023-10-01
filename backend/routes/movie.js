@@ -79,8 +79,11 @@ router.post("/seatupdate/:id", async(req,res)=>{
         "userId": req.body.userId,
         "moivieId":req.body.moivieId,
         "movieName":req.body.movieName,
-        "seatNo":req.body.name
+        "seatNo":req.body.name,
+        
     }
+    const useremail=req.body.email;
+    const content=req.body.text;
     console.log(req.body);
     var query={_id:id};
     try {

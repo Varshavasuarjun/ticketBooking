@@ -83,8 +83,10 @@ const Movie = () => {
             "name":selectedSeat,
             "userId": userId,
             "moivieId": movieId,
-            "movieName":movieName,
+            "movieName":movieName           
+            
         }
+
         const emaildata= {
             "email": email,
             "text":`Hello  ${userName} ${'\n'} This is the movie ticket conformation message  ${'\n'} Movie : ${movieName}  ${'\n'} seat No : ${selectedSeat}`
@@ -93,21 +95,15 @@ const Movie = () => {
         .then((response)=>{
             console.log(response.data)
             if(response.data.message=="seats updated"){
-                // alert(`Ticket  conformed`);
-                // window.location.reload("false");
+               alert("ticket booked, wait for email conformation")
                 console.log(response.data.message);
                 axios.post("http://localhost:7000/api/sendmail",emaildata)
                 .then((response)=>{
                     console.log("email.send");
-                })
-                
-               
-
-
-
-
-               
-                
+                     alert(` email conformation send`);
+                     navigate("/bookedtickets")
+                }) 
+                                     
             }
         })
         .catch(err=>console.log(err))
